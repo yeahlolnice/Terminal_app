@@ -105,6 +105,31 @@ loop do
                 else
                     gamble.gamble_num(number, bet)
                 end
+            elsif bet_selction == bet_options[1]
+                #red
+                gamble = Gamble.new(bet)
+                data = CSV.parse(File.read("users.csv"), headers: true)
+                data.each do |row|
+                    if $username == row["username"]
+                        @balance = row["balance"].to_i
+                    end
+                end
+                puts "How much do you want to bet?"
+                bet = gets.chomp.to_i
+                if bet <= 0
+                    puts "Bet must be a number above 0"
+                    sleep 2
+                elsif @balance < bet
+                    puts "Bet exceeds balance"
+                    sleep 2
+                else
+                    gamble.red(bet)
+                end
+            elsif bet_selction == bet_options[2]
+            elsif bet_selction == bet_options[3]
+            elsif bet_selction == bet_options[4]
+            elsif bet_selction == bet_options[5]
+            elsif bet_selction == bet_options[6]
             elsif bet_selction == bet_options[7]
                 break
             end
