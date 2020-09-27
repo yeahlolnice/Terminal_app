@@ -6,6 +6,6 @@ class Admin < User
     end
 
     def global_log
-
+        
     end
 end

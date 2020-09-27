@@ -3,23 +3,25 @@ require 'tty-prompt'
 # require_relative '/classes/admin'
 # require_relative '/classes/public'
 require_relative 'classes/user'
+require_relative 'classes/gamble'
 
 
-prompt = TTY::Prompt.new
-account_choice = 'Login or Create'
-choices = %w(Login Create_account)
-answer = prompt.select(account_choice, choices)
-if answer == choices[0]
-    loop do
+loop do
+    system "clear"
+    prompt = TTY::Prompt.new
+    account_choice = 'Login or Create'
+    choices = %w(Login Create_account)
+    answer = prompt.select(account_choice, choices)
+    if answer == choices[0]
         valid_user = false
         system "clear"
         puts "Username:"
-        @username = gets.chomp
-        puts "Password:"
-        password = gets.chomp
+        $username = gets.chomp
+        puts "password:"
+        $password = gets.chomp
         data = CSV.parse(File.read("users.csv"), headers: true)
         data.each do |row|
-            if @username == row["username"] && password == row["password"]
+            if $username == row["username"] && $password == row["password"]
                 puts "#{row["username"]}: Logged in."
                 valid_user = true
                 sleep 2
@@ -30,20 +32,18 @@ if answer == choices[0]
             sleep 1.5
         else
             break
-        end
+        end 
     end
-end
-if answer == choices[1]
-    data = CSV.parse(File.open("users.csv", "a+"), headers: true)
-    loop do
+    if answer == choices[1]
+        data = CSV.parse(File.open("users.csv", "a+"), headers: true)
         new_user = true
         system "clear"
         puts "Username:"
-        @username = gets.chomp
-        puts "Password:"
-        password = gets.chomp
+        $username = gets.chomp
+        puts "password:"
+        $password = gets.chomp
         data.each do |row|
-            if @username == row["username"]
+            if $username == row["username"]
                 new_user = false
                 puts "This account name exist already"
                 sleep 2
@@ -51,10 +51,10 @@ if answer == choices[1]
         end
         if new_user == true
             CSV.open("users.csv", "a") do |csv|
-                csv << [@username,password,0,false]
+                csv << [$username,$password,0,false]
                 csv.close
             end
-            puts "Account created: hello #{@username}"
+            puts "Account created: hello #{$username}"
             sleep 1.5
             break
         end
@@ -67,61 +67,48 @@ loop do
     menu_options = %w(Balance Make_a_bet Bet_history Exit)
     menu_selction = main_prompt.select(menu_message, menu_options)
     if menu_selction == menu_options[0]
-        data = CSV.parse(File.read("users.csv"), headers: true)
-        data.each do |row|
-            if row["username"] == @username
-                system "clear"
-                puts "Your balance is: $#{row["balance"]}"
-                balance_prompt = TTY::Prompt.new
-                balance_message = 'Balances menu:'
-                balance_options = %w(Deposit Withdraw Cancel)
-                balance_selction = balance_prompt.select(balance_message, balance_options)
-                if balance_selction == balance_options[2]
-                    break
-                elsif balance_selction == balance_options[0]
-                    # deposit section
-                    puts "How much do you want to deposit?"
-                    deposit = gets.chomp.to_i
-                    if deposit > 0
-                        new_balance = row["balance"].to_i + deposit
-                        row["balance"] = new_balance.to_s
-                        puts "you now have: $#{new_balance}"
-                        File.write("users.csv", data) do |row|
-                            row["balance"] << [new_balance]
-                        end
-                        sleep 1
-                    elsif deposit == 0
-                        puts "You must enter a number above 0"
-                        sleep 1.5
-                    end
-                elsif balance_selction == balance_options[1]
-                    #withdraw section
-                    loop do
-                        system "clear"
-                        puts "How much do you want to withdraw?"
-                        withdraw = gets.chomp.to_i
-                        new_balance = row["balance"].to_i - withdraw
-                        if withdraw <= 0
-                            puts "Enter a number greater then 0"
-                            sleep 1.3
-                        elsif new_balance < 0
-                            puts "Can't withdraw more then you have!"
-                            sleep 1.3
-                        elsif new_balance >= 0
-                            row["balance"] = new_balance.to_s
-                            puts "you now have: $#{new_balance}"
-                            File.write("users.csv", data) do |row|
-                                row["balance"] << [new_balance]
-                            end
-                            sleep 1
-                            break
-                        end
-                    end
-                end
-            end
-        end
+        user = User.new($username, $password)
+        user.balanceMenu
     elsif menu_selction == menu_options[1]
         #make a bet
+        loop do
+            bet_prompt = TTY::Prompt.new
+            bet_message = 'Feeling lucky?'
+            bet_options = %w(Number Red Black Odd Even Split Help Cancel)
+            bet_selction = bet_prompt.select(bet_message, bet_options)
+            if bet_selction == bet_options[0]
+                system "clear"
+                puts "Previous winning numbers#{$win_list}"
+                puts "Pick a number between 1 & 36 or '0' '00'"
+                number = gets.chomp.to_i
+                puts "How much do you want to bet?"
+                bet = gets.chomp.to_i
+                gamble = Gamble.new(bet)
+                data = CSV.parse(File.read("users.csv"), headers: true)
+                data.each do |row|
+                    if $username == row["username"]
+                        @balance = row["balance"].to_i
+                    end
+                end
+                if number > 36
+                    puts "Number must be less then 36."
+                    sleep 2
+                elsif number < 0
+                    puts "Number must be between 1 & 36 or '0' '00'"
+                    sleep 2
+                elsif bet == 0
+                    puts "bet must be greater then 0"
+                    sleep 2
+                elsif bet > @balance
+                    puts "Bet exceeds balance"
+                    sleep 2
+                else
+                    gamble.gamble_num(number, bet)
+                end
+            elsif bet_selction == bet_options[7]
+                break
+            end
+        end
     elsif menu_selction == menu_options[2]
         #bet history
     elsif menu_selction == menu_options[3]
