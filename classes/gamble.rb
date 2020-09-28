@@ -2,7 +2,12 @@ require 'csv'
 
 class Gamble 
 
-    
+    @@win_list = []
+
+    def self.win_list
+        return @@win_list
+    end
+
     def initialize(bet)
         @bet = bet
     end
@@ -10,7 +15,7 @@ class Gamble
     def spin_wheel
         numbers = [0,00,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27,28,29,30,31,32,33,34,35,36]
         @win_number = numbers.shuffle!.pop
-        @@win_list.push(@@win_number)
+        @@win_list.push(@win_number)
         system "clear"
         puts "3"
         sleep 1
@@ -56,6 +61,7 @@ class Gamble
     end
 
     def red(bet)
+        system "clear"
         data = CSV.parse(File.read("users.csv"), headers: true)
         red_numbers = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]
         spin_wheel()
@@ -69,7 +75,7 @@ class Gamble
                         row["balance"] << [new_balance]
                         File.close
                     end
-                    puts @win_list
+                    puts Gamble.win_list
                     puts "YOU WON!!!"
                     puts "$#{bet*2}"
                     sleep 5
@@ -138,7 +144,7 @@ class Gamble
         puts "Winning numbers:#{@win_list}"
         spin_wheel()
         sleep 0.5
-        if black_numbers.include?(@win_number)
+        if odd_numbers.include?(@win_number)
             data.each do |row|
                 if row["username"] == $username
                     new_balance = row["balance"].to_i + (bet*2)

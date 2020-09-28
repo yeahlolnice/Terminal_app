@@ -3,6 +3,7 @@ GEM
   specs:
     pastel (0.8.0)
       tty-color (~> 0.5)
+    rainbow (3.0.0)
     tty-color (0.5.2)
     tty-cursor (0.7.1)
     tty-prompt (0.22.0)
@@ -19,6 +20,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  rainbow (~> 3.0)
   tty-prompt (~> 0.22.0)
 
 BUNDLED WITH

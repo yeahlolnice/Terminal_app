@@ -70,14 +70,14 @@ class User
         
     end
 
-    def check_balance
+    def self.checkBalance
         data = CSV.parse(File.read("users.csv"), headers: true)
         data.each do |row|
             if $username == row["username"]
                 balance = row["balance"].to_i
+                return balance
             end
         end
-        return balance
     end
 end
 
