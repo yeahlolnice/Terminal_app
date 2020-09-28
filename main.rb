@@ -78,7 +78,7 @@ loop do
             bet_selction = bet_prompt.select(bet_message, bet_options)
             if bet_selction == bet_options[0]
                 system "clear"
-                puts "Previous winning numbers#{$win_list}"
+                puts "Previous winning numbers#{@@win_list}"
                 puts "Pick a number between 1 & 36 or '0' '00'"
                 number = gets.chomp.to_i
                 puts "How much do you want to bet?"
@@ -108,18 +108,15 @@ loop do
             elsif bet_selction == bet_options[1]
                 #red
                 gamble = Gamble.new(bet)
-                data = CSV.parse(File.read("users.csv"), headers: true)
-                data.each do |row|
-                    if $username == row["username"]
-                        @balance = row["balance"].to_i
-                    end
-                end
+                puts "Previous winning numbers#{@@win_list}"
+                user.check_balance
                 puts "How much do you want to bet?"
+                    print "$"
                 bet = gets.chomp.to_i
                 if bet <= 0
                     puts "Bet must be a number above 0"
                     sleep 2
-                elsif @balance < bet
+                elsif balance < bet
                     puts "Bet exceeds balance"
                     sleep 2
                 else
@@ -127,6 +124,7 @@ loop do
                 end
             elsif bet_selction == bet_options[2]
                 #black
+                puts "Previous winning numbers#{@@win_list}"
                 gamble = Gamble.new(bet)
                 data = CSV.parse(File.read("users.csv"), headers: true)
                 data.each do |row|
@@ -147,9 +145,80 @@ loop do
                     gamble.black(bet)
                 end
             elsif bet_selction == bet_options[3]
+                #odd bet feature
+                puts "Previous winning numbers#{@@win_list}"
+                gamble = Gamble.new(bet)
+                data = CSV.parse(File.read("users.csv"), headers: true)
+                data.each do |row|
+                    if $username == row["username"]
+                        @balance = row["balance"].to_i
+                    end
+                end
+                puts "How much do you want to bet?"
+                print "$"
+                bet = gets.chomp.to_i
+                if bet <= 0
+                    puts "Bet must be a number above 0"
+                    sleep 2
+                elsif @balance < bet
+                    puts "Bet exceeds balance"
+                    sleep 2
+                else
+                    gamble.odd(bet)
+                end
             elsif bet_selction == bet_options[4]
+                #Even bet feature
+                puts "Previous winning numbers#{@@win_list}"
+                gamble = Gamble.new(bet)
+                data = CSV.parse(File.read("users.csv"), headers: true)
+                data.each do |row|
+                    if $username == row["username"]
+                        @balance = row["balance"].to_i
+                    end
+                end
+                puts "How much do you want to bet?"
+                print "$"
+                bet = gets.chomp.to_i
+                if bet <= 0
+                    puts "Bet must be a number above 0"
+                    sleep 2
+                elsif @balance < bet
+                    puts "Bet exceeds balance"
+                    sleep 2
+                else
+                    gamble.even(bet)
+                end
             elsif bet_selction == bet_options[5]
+                #odd bet feature
+                puts "Previous winning numbers#{@@win_list}"
+                gamble = Gamble.new(bet)
+                data = CSV.parse(File.read("users.csv"), headers: true)
+                data.each do |row|
+                    if $username == row["username"]
+                        @balance = row["balance"].to_i
+                    end
+                end
+                puts "How much do you want to bet?"
+                print "$"
+                bet = gets.chomp.to_i
+                if bet <= 0
+                    puts "Bet must be a number above 0"
+                    sleep 2
+                elsif @balance < bet
+                    puts "Bet exceeds balance"
+                    sleep 2
+                else
+                    gamble.odd(bet)
+                end
+            elsif bet_selction == bet_options[4]
+                #split feature
             elsif bet_selction == bet_options[6]
+                puts "Number - bet on any number between 1 & 36 or '0' '00'"
+                puts "Red - bet on all the red numbers"
+                puts "Black - bet on all the black"
+                puts "Odd - bet on all odd numbers"
+                puts "Even - bet on all even numbers"
+                puts "Split - bet on 2 numbers bedside each other"
             elsif bet_selction == bet_options[7]
                 break
             end
