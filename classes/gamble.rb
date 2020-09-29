@@ -5,7 +5,6 @@ class Gamble
     @@win_list = []
 
     def self.win_list
-        @win_val = @@win_list.pop
         return @@win_list
     end
 
@@ -13,9 +12,9 @@ class Gamble
         @bet = bet
     end
     
-    def self.logBet(bet, win_val, bet_val, val_returned)
+    def self.logBet(stake, bet_val, win_val, val_returned)
         CSV.open("betLog.csv", "a") do |csv|
-            csv << [$username,bet,bet_val,win_val,val_returned] 
+            csv << [$username,stake,bet_val,win_val,val_returned] 
             csv.close
         end
     end
@@ -51,6 +50,7 @@ class Gamble
                     @val_returned = bet*35
                 end
             end
+            num = num.to_s
             Gamble.logBet(bet,num,@win_val,@val_returned)
         else
             system "clear"
@@ -77,7 +77,6 @@ class Gamble
         data = CSV.parse(File.read("users.csv"), headers: true)
         red_numbers = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]
         spin_wheel()
-        sleep 0.5
         if red_numbers.include?(@win_val)
             data.each do |row|
                 if row["username"] == $username
@@ -87,7 +86,6 @@ class Gamble
                         row["balance"] << [new_balance]
                         File.close
                     end
-                    puts Gamble.win_list
                     puts "YOU WON!!!"
                     puts "$#{bet*2}"
                     sleep 5
@@ -258,6 +256,31 @@ class Gamble
         puts "#{Rainbow(31).bg(:black).red} #{Rainbow(32).bg(:red).black} #{Rainbow(33).bg(:black).red}" 
         puts "#{Rainbow(34).bg(:red).black} #{Rainbow(35).bg(:black).red} #{Rainbow(36).bg(:red).black}" 
         puts "press enter to continue"
+        
+        table_array = [
+            [1,2,3],
+            [4,5,6],
+            [7,8,9],
+            [10,11,12],
+            [13,14,15],
+            [16,17,18],
+            [19,20,21],
+            [22,23,24],
+            [25,26,27],
+            [28,29,30],
+            [31,32,33],
+            [34,35,36]
+        ]
+        # looping over table_array
+        table_array.each_index do |y|
+            # Get subarray and loop over its indexes also.
+            subarray = table_array[y]
+            subarray.each_index do |x|
+                # Display x and y of array.
+                puts "Y:#{y} X:#{x} "
+            end
+        
+        end
         gets.chomp
     end
 

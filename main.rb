@@ -9,16 +9,18 @@ require_relative 'classes/gamble'
 
 loop do
     system "clear"
-    puts "
-                               /$$             /$$     /$$              
-                              | $$            | $$    | $$              
-  /$$$$$$   /$$$$$$  /$$   /$$| $$  /$$$$$$  /$$$$$$ /$$$$$$    /$$$$$$ 
- /$$__  $$ /$$__  $$| $$  | $$| $$ /$$__  $$|_  $$_/|_  $$_/   /$$__  $$
-| $$  \\__/| $$  \\ $$| $$  | $$| $$| $$$$$$$$  | $$    | $$    | $$$$$$$$
-| $$      | $$  | $$| $$  | $$| $$| $$_____/  | $$ /$$| $$ /$$| $$_____/
-| $$      |  $$$$$$/|  $$$$$$/| $$|  $$$$$$$  |  $$$$/|  $$$$/|  $$$$$$$
-|__/       \\______/  \\______/ |__/ \\_______/   \\___/   \\___/   \\_______/
-    "
+    puts Rainbow("
+      /$$           /$$$$$$  /$$ /$$         /$$                    /$$   
+    /$$$$$$        /$$__  $$| $$| $$        |__/                  /$$$$$$ 
+   /$$__  $$      | $$  \\ $$| $$| $$         /$$ /$$$$$$$        /$$__  $$
+  | $$  \\__/      | $$$$$$$$| $$| $$ /$$$$$$| $$| $$__  $$      | $$  \\__/
+  |  $$$$$$       | $$__  $$| $$| $$|______/| $$| $$  \\ $$      |  $$$$$$ 
+   \\____  $$      | $$  | $$| $$| $$        | $$| $$  | $$       \\____  $$
+   /$$  \\ $$      | $$  | $$| $$| $$        | $$| $$  | $$       /$$  \\ $$
+  |  $$$$$$/      |__/  |__/|__/|__/        |__/|__/  |__/      |  $$$$$$/
+   \\_  $$_/                                                      \\_  $$_/ 
+     \\__/                                                          \\__/   
+                                                                          ").yellow
     prompt = TTY::Prompt.new
     account_choice = 'Login or Create'
     choices = %w(Login Create_account)
@@ -73,29 +75,47 @@ loop do
 end
 loop do 
     system "clear"
+    puts Rainbow("
+    /$$      /$$           /$$                                            
+    | $$  /$ | $$          | $$                                            
+    | $$ /$$$| $$  /$$$$$$ | $$  /$$$$$$$  /$$$$$$  /$$$$$$/$$$$   /$$$$$$ 
+    | $$/$$ $$ $$ /$$__  $$| $$ /$$_____/ /$$__  $$| $$_  $$_  $$ /$$__  $$
+    | $$$$_  $$$$| $$$$$$$$| $$| $$      | $$  \\ $$| $$ \\ $$ \\ $$| $$$$$$$$
+    | $$$/ \\  $$$| $$_____/| $$| $$      | $$  | $$| $$ | $$ | $$| $$_____/
+    | $$/   \\  $$|  $$$$$$$| $$|  $$$$$$$|  $$$$$$/| $$ | $$ | $$|  $$$$$$$
+    |__/     \\__/ \\_______/|__/ \\_______/ \\______/ |__/ |__/ |__/ \\_______/
+    ").green
     main_prompt = TTY::Prompt.new
     menu_message = 'Welcom to the main menu'
     menu_options = %w(Balance Make_a_bet Bet_history Exit)
-    menu_selction = main_prompt.select(menu_message, menu_options)
-    if menu_selction == menu_options[0]
+    menu_selection = main_prompt.select(menu_message, menu_options)
+    if menu_selection == menu_options[0]
         user = User.new($username, $password)
         user.balanceMenu
-    elsif menu_selction == menu_options[1]
+    elsif menu_selection == menu_options[1]
         #make a bet
         loop do
             system "clear"
+            puts Rainbow("
+             /$$$$$$$              /$$                                                      
+            | $$__  $$            | $$                                                      
+            | $$  \\ $$  /$$$$$$  /$$$$$$         /$$$$$$/$$$$   /$$$$$$  /$$$$$$$  /$$   /$$
+            | $$$$$$$  /$$__  $$|_  $$_/        | $$_  $$_  $$ /$$__  $$| $$__  $$| $$  | $$
+            | $$__  $$| $$$$$$$$  | $$          | $$ \\ $$ \\ $$| $$$$$$$$| $$  \\ $$| $$  | $$
+            | $$  \\ $$| $$_____/  | $$ /$$      | $$ | $$ | $$| $$_____/| $$  | $$| $$  | $$
+            | $$$$$$$/|  $$$$$$$  |  $$$$/      | $$ | $$ | $$|  $$$$$$$| $$  | $$|  $$$$$$/
+            |_______/  \\_______/   \\___/        |__/ |__/ |__/ \\_______/|__/  |__/ \\______/").red
             puts "Current balance: $#{User.checkBalance}"
             bet_prompt = TTY::Prompt.new
-            bet_message = 'Feeling lucky?'
-            bet_options = %w(Number Red Black Odd Even Split Help Cancel)
-            bet_selction = bet_prompt.select(bet_message, bet_options)
-            if bet_selction == bet_options[0]
+            bet_options = ["Number", "Red", "Black", "Odd", "Even", "Split", "Help", "Cancel"]
+            bet_selection = bet_prompt.select("Felling lucky?", bet_options, per_page: 8)
+            if bet_selection == bet_options[0]
                 system "clear"
                 puts "Previous winning numbers#{Gamble.win_list}"
                 puts "Pick a number between 1 & 36 or '0' '00'"
                 number = gets.chomp.to_i
                 puts "How much do you want to bet?"
-                bet = gets.chomp.to_i
+                    bet = gets.chomp.to_i
                 gamble = Gamble.new(bet)
                 if number > 36
                     puts "Number must be less then 36."
@@ -112,12 +132,12 @@ loop do
                 else
                     gamble.gamble_num(number, bet)
                 end
-            elsif bet_selction == bet_options[1]
+            elsif bet_selection == bet_options[1]
                 #red
                 gamble = Gamble.new(bet)
                 puts "Previous winning numbers #{Gamble.win_list}"
                 puts "How much do you want to bet?"
-                print "$"
+                    print "$"
                 bet = gets.chomp.to_i
                 if bet <= 0
                     puts "Bet must be a number above 0"
@@ -128,7 +148,7 @@ loop do
                 else
                     gamble.red(bet)
                 end
-            elsif bet_selction == bet_options[2]
+            elsif bet_selection == bet_options[2]
                 #black
                 puts "Previous winning numbers#{Gamble.win_list}"
                 gamble = Gamble.new(bet)
@@ -150,7 +170,7 @@ loop do
                 else
                     gamble.black(bet)
                 end
-            elsif bet_selction == bet_options[3]
+            elsif bet_selection == bet_options[3]
                 #Even bet feature
                 puts "Previous winning numbers#{Gamble.win_list}"
                 gamble = Gamble.new(bet)
@@ -172,7 +192,7 @@ loop do
                 else
                     gamble.even(bet)
                 end
-            elsif bet_selction == bet_options[4]
+            elsif bet_selection == bet_options[4]
                 #odd bet feature
                 puts "Previous winning numbers#{Gamble.win_list}"
                 gamble = Gamble.new(bet)
@@ -188,10 +208,10 @@ loop do
                 else
                     gamble.odd(bet)
                 end
-            elsif bet_selction == bet_options[5]
+            elsif bet_selection == bet_options[5]
                 #split feature
                 Gamble.split
-            elsif bet_selction == bet_options[6]
+            elsif bet_selection == bet_options[6]
                 system "clear"
                 puts "Number - bet on any number between 1 & 36 or '0' '00'"
                 puts "Red - bet on all the red numbers"
@@ -201,14 +221,14 @@ loop do
                 puts "Split - bet on 2 numbers bedside each other"
                 puts "press enter to exit"
                 gets.chomp
-            elsif bet_selction == bet_options[7]
+            elsif bet_selection == bet_options[7]
                 break
             end
         end
-    elsif menu_selction == menu_options[2]
+    elsif menu_selection == menu_options[2]
         #bet history
         Gamble.betHistory
-    elsif menu_selction == menu_options[3]
+    elsif menu_selection == menu_options[3]
         system "clear"
         puts "logging out"
         sleep 2

@@ -1,19 +1,16 @@
 username,stake,bet_val,winning_result,return
 yeahlolnice,50,black,red,no return 
-a,50,Black,Red,no return
-a,50,Black,Red,no return
-a,75,Odd,Odd,150
-a,10,Even,Odd,no return
-a,50,Odd,Odd,100
-a,75,Odd,Odd,150
-a,10,Even,Odd,no return
-a,110,13,10,no return
-a,500,Even,Odd,no return
-a,5,Even,Odd,no return
-a,5,Odd,Odd,10
-yeahlolnice,25,Red,Red,50
-yeahlolnice,60,1,14,no return
-yeahlolnice,50,25,9,no return
-yeahlolnice,50,18,0,no return
-yeahlolnice,500,Red,Black,no return
-yeahlolnice,70,34,4,no return
+a,15,0,29,no return
+a,25,5,25,no return
+a,500,Red,Red,1000
+a,1000,Odd,Even,no return
+a,20,Red,Black,no return
+a,500,Red,Red,1000
+a,12312311,Red,Red,24624622
+a,1231313,Red,Red,2462626
+a,123123123,Red,Red,246246246
+a,40,Red,Red,80
+a,40,Red,Black,no return
+a,50,15,24,no return
+a,50,8,3,no return
+a,100,0,19,no return
