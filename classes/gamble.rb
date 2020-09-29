@@ -13,9 +13,9 @@ class Gamble
         @bet = bet
     end
     
-    def self.logBet(bet, win_val, val_returned)
+    def self.logBet(bet, win_val, bet_val, val_returned)
         CSV.open("betLog.csv", "a") do |csv|
-            csv << [$username,bet,win_val,val_returned] 
+            csv << [$username,bet,bet_val,win_val,val_returned] 
             csv.close
         end
     end
@@ -51,7 +51,7 @@ class Gamble
                     @val_returned = bet*35
                 end
             end
-            Gamble.logBet(bet,@win_val,@val_returned)
+            Gamble.logBet(bet,num,@win_val,@val_returned)
         else
             system "clear"
             puts "Better luck next time!"
@@ -68,7 +68,7 @@ class Gamble
             end
             @val_returned = "no return"
             sleep 2
-            Gamble.logBet(bet,@win_val,@val_returned)
+            Gamble.logBet(bet,num,@win_val,@val_returned)
         end 
     end
 
@@ -94,8 +94,7 @@ class Gamble
                 end
             end
             @val_returned = bet*2
-            
-            Gamble.logBet("Red","Red",@val_returned)
+            Gamble.logBet(bet,"Red","Red",@val_returned)
         else
             system "clear"
             puts "Better luck next time!"
@@ -109,7 +108,7 @@ class Gamble
                         File.close
                     end
                     @val_returned = "no return"
-                    Gamble.logBet("Red","Black",@val_returned)
+                    Gamble.logBet(bet,"Red","Black",@val_returned)
                     sleep 4
                 end
             end
@@ -134,7 +133,7 @@ class Gamble
                     @val_returned = bet*2
                     puts "YOU WON!!!"
                     puts "$#{bet*2}"
-                    Gamble.logBet("Black","Black",@val_returned)
+                    Gamble.logBet(bet,"Black","Black",@val_returned)
                     sleep 5
                 end
             end
@@ -151,7 +150,7 @@ class Gamble
                         File.close
                     end
                     @val_returned = "no return"
-                    Gamble.logBet("Black","Red",@val_returned)
+                    Gamble.logBet(bet,"Black","Red",@val_returned)
                     sleep 4
                 end
             end
@@ -175,7 +174,7 @@ class Gamble
                     @val_returned = bet*2
                     puts "YOU WON!!!"
                     puts "$#{bet*2}"
-                    Gamble.logBet("Odd","Odd",@val_returned)
+                    Gamble.logBet(bet,"Odd","Odd",@val_returned)
                     sleep 5
                 end
             end
@@ -192,7 +191,7 @@ class Gamble
                         File.close
                     end
                     @val_returned = "no return"
-                    Gamble.logBet("Odd","Even",@val_returned)
+                    Gamble.logBet(bet,"Odd","Even",@val_returned)
                     sleep 4
                 end
             end
@@ -214,10 +213,12 @@ class Gamble
                         row["balance"] << [new_balance]
                         File.close
                     end
-                    @val_returned = bet*2
+                    x = bet*2.to_s
+                    @val_returned = "$"+ x
+                    p @val_returned
                     puts "YOU WON!!!"
                     puts "$#{bet*2}"
-                    Gamble.logBet("Even","Even",@val_returned)
+                    Gamble.logBet(bet,"Even","Even",@val_returned)
                     sleep 5
                 end
             end
@@ -234,7 +235,7 @@ class Gamble
                         File.close
                     end
                     @val_returned = "no return"
-                    Gamble.logBet("Even","Odd",@val_returned)
+                    Gamble.logBet(bet,"Even","Odd",@val_returned)
                     sleep 4
                 end
             end
@@ -267,8 +268,7 @@ class Gamble
         # end
         CSV.foreach("betLog.csv", headers: true) do |row|
             if row["username"] == $username
-                puts "$#{row["stake"]} on #{row["bet_val"]} return: #{row["return"]} "
-                row.close
+                puts "#{row["stake"]} on #{row["bet_val"]} return: #{row["return"]} "
             end
         end
         puts "Press enter to continue"
