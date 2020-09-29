@@ -9,6 +9,16 @@ require_relative 'classes/gamble'
 
 loop do
     system "clear"
+    puts "
+                               /$$             /$$     /$$              
+                              | $$            | $$    | $$              
+  /$$$$$$   /$$$$$$  /$$   /$$| $$  /$$$$$$  /$$$$$$ /$$$$$$    /$$$$$$ 
+ /$$__  $$ /$$__  $$| $$  | $$| $$ /$$__  $$|_  $$_/|_  $$_/   /$$__  $$
+| $$  \\__/| $$  \\ $$| $$  | $$| $$| $$$$$$$$  | $$    | $$    | $$$$$$$$
+| $$      | $$  | $$| $$  | $$| $$| $$_____/  | $$ /$$| $$ /$$| $$_____/
+| $$      |  $$$$$$/|  $$$$$$/| $$|  $$$$$$$  |  $$$$/|  $$$$/|  $$$$$$$
+|__/       \\______/  \\______/ |__/ \\_______/   \\___/   \\___/   \\_______/
+    "
     prompt = TTY::Prompt.new
     account_choice = 'Login or Create'
     choices = %w(Login Create_account)
@@ -74,6 +84,7 @@ loop do
         #make a bet
         loop do
             system "clear"
+            puts "Current balance: $#{User.checkBalance}"
             bet_prompt = TTY::Prompt.new
             bet_message = 'Feeling lucky?'
             bet_options = %w(Number Red Black Odd Even Split Help Cancel)
@@ -86,12 +97,6 @@ loop do
                 puts "How much do you want to bet?"
                 bet = gets.chomp.to_i
                 gamble = Gamble.new(bet)
-                data = CSV.parse(File.read("users.csv"), headers: true)
-                data.each do |row|
-                    if $username == row["username"]
-                        @balance = row["balance"].to_i
-                    end
-                end
                 if number > 36
                     puts "Number must be less then 36."
                     sleep 2
@@ -101,7 +106,7 @@ loop do
                 elsif bet == 0
                     puts "bet must be greater then 0"
                     sleep 2
-                elsif bet > @balance
+                elsif bet > User.checkBalance
                     puts "Bet exceeds balance"
                     sleep 2
                 else
@@ -185,20 +190,7 @@ loop do
                 end
             elsif bet_selction == bet_options[5]
                 #split feature
-                puts "#{Rainbow("1 ").bg(:red).black} #{Rainbow("2 ").bg(:black).red} #{Rainbow("3 ").bg(:red).black}" 
-                puts "#{Rainbow("4 ").bg(:black).red} #{Rainbow("5 ").bg(:red).black} #{Rainbow("6 ").bg(:black).red}" 
-                puts "#{Rainbow("7 ").bg(:red).black} #{Rainbow("8 ").bg(:black).red} #{Rainbow("9 ").bg(:red).black}" 
-                puts "#{Rainbow(10).bg(:black).red} #{Rainbow(11).bg(:black).red} #{Rainbow(12).bg(:red).black}" 
-                puts "#{Rainbow(13).bg(:black).red} #{Rainbow(14).bg(:red).black} #{Rainbow(15).bg(:black).red}" 
-                puts "#{Rainbow(16).bg(:red).black} #{Rainbow(17).bg(:black).red} #{Rainbow(18).bg(:red).black}" 
-                puts "#{Rainbow(19).bg(:red).black} #{Rainbow(20).bg(:black).red} #{Rainbow(21).bg(:red).black}" 
-                puts "#{Rainbow(22).bg(:black).red} #{Rainbow(23).bg(:red).black} #{Rainbow(24).bg(:black).red}" 
-                puts "#{Rainbow(25).bg(:red).black} #{Rainbow(26).bg(:black).red} #{Rainbow(27).bg(:red).black}" 
-                puts "#{Rainbow(28).bg(:black).red} #{Rainbow(29).bg(:black).red} #{Rainbow(30).bg(:red).black}" 
-                puts "#{Rainbow(31).bg(:black).red} #{Rainbow(32).bg(:red).black} #{Rainbow(33).bg(:black).red}" 
-                puts "#{Rainbow(34).bg(:red).black} #{Rainbow(35).bg(:black).red} #{Rainbow(36).bg(:red).black}" 
-                puts "press enter to continue"
-                gets.chomp
+                Gamble.split
             elsif bet_selction == bet_options[6]
                 system "clear"
                 puts "Number - bet on any number between 1 & 36 or '0' '00'"
@@ -215,6 +207,7 @@ loop do
         end
     elsif menu_selction == menu_options[2]
         #bet history
+        Gamble.betHistory
     elsif menu_selction == menu_options[3]
         system "clear"
         puts "logging out"
