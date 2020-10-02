@@ -1,7 +1,7 @@
 require 'csv'
 
 class Gamble 
-
+    
     @@win_list = []
 
     def self.win_list
@@ -10,6 +10,7 @@ class Gamble
 
     def initialize(bet)
         @bet = bet
+        @row = CSV.parse(File.read("users.csv"), headers: true).find{|row| row["username"] == $username}
     end
     
     def self.logBet(stake, bet_val, win_val, val_returned)
@@ -48,18 +49,24 @@ class Gamble
                     puts "$#{bet*35}"
                     sleep 5
                     @val_returned = bet*35
+                    puts "Winning Row:"
+                    p row
+                    return row
                 end
             end
             num = num.to_s
             Gamble.logBet(bet,num,@win_val,@val_returned)
         else
-            system "clear"
+            # system "clear"
             puts "Better luck next time!"
             puts "Winning number: #{@win_val}"
+            return_result = nil
             data.each do |row|
                 if row["username"] == $username
                     new_balance = row["balance"].to_i - bet
                     row["balance"] = new_balance.to_s
+                    return_result = row
+                    return_result["balance"] = new_balance
                     File.write("users.csv", data) do |row|
                         row["balance"] << [new_balance]
                         File.close
@@ -69,6 +76,7 @@ class Gamble
             @val_returned = "no return"
             sleep 2
             Gamble.logBet(bet,num,@win_val,@val_returned)
+            return return_result
         end 
     end
 
@@ -180,19 +188,16 @@ class Gamble
             system "clear"
             puts "Better luck next time!"
             puts "Winning Number #{@win_val}"
-            data.each do |row|
-                if row["username"] == $username
-                    new_balance = row["balance"].to_i - bet
-                    row["balance"] = new_balance.to_s
-                    File.write("users.csv", data) do |row|
-                        row["balance"] << [new_balance]
-                        File.close
-                    end
-                    @val_returned = "no return"
-                    Gamble.logBet(bet,"Odd","Even",@val_returned)
-                    sleep 4
-                end
+            new_balance = @row["balance"].to_i - bet
+            @row["balance"] = new_balance.to_s
+            sleep 3
+            File.write("users.csv", data) do |row|
+                row["balance"] << [new_balance]
+                File.close
             end
+            @val_returned = "no return"
+            Gamble.logBet(bet,"Odd","Even",@val_returned)
+            sleep 4
         end
     end
 

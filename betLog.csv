@@ -14,3 +14,47 @@ a,40,Red,Black,no return
 a,50,15,24,no return
 a,50,8,3,no return
 a,100,0,19,no return
+a,50,3,5,no return
+a,50,Red,Black,no return
+a,50,Odd,Odd,100
+a,50,Odd,Even,no return
+a,50,Black,Black,100
+a,50000000,Black,Black,100000000
+davebets,50,Black,Black,100
+davebets,250,Red,Red,500
+davebets,1000,Red,Red,2000
+a,100,Black,Red,no return
+a,2950,Black,Red,no return
+a,500,Red,Black,no return
+a,500,Black,Black,1000
+davebets,500,Black,Red,no return
+davebets,2000,Black,Red,no return
+davebets,2000,Black,Red,no return
+davebets,551,Black,Red,no return
+davebets,1,Even,Odd,no return
+davebets,1,Odd,Odd,2
+davebets,1,Odd,Odd,2
+davebets,1,Odd,Odd,2
+davebets,1,Odd,Even,no return
+davebets,1,Odd,Odd,2
+davebets,1,Odd,Even,no return
+davebets,1,1,35,no return
+davebets,1,Odd,Even,no return
+a,1,1,28,no return
+a,1,Odd,Even,no return
+a,1,1,20,no return
+a,1,Odd,Odd,2
+yeahlolnice,1,1,0,no return
+yeahlolnice,1,Odd,Odd,2
+yeahlolnice,2,Odd,Even,no return
+davebets,5,Red,Black,no return
+davebets,1,1,29,no return
+davebets,1,1,24,no return
+davebets,5,3,27,no return
+davebets,1,1,2,no return
+davebets,1,1,30,no return
+davebets,1,1,27,no return
+davebets,1,1,29,no return
+davebets,1,1,31,no return
+davebets,-400,4,16,no return
+davebets,1499,1,18,no return
