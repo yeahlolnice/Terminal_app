@@ -58,3 +58,28 @@ davebets,1,1,29,no return
 davebets,1,1,31,no return
 davebets,-400,4,16,no return
 davebets,1499,1,18,no return
+a,50,Odd,Odd,100
+a,5,Red,Black,no return
+a,1,1,10,no return
+a,1,Red,Black,no return
+a,4,Red,Red,8
+a,11,Red,Black,no return
+a,1,1,21,no return
+davebets,1,1,0,no return
+davebets,3,Red,Black,no return
+davebets,1,Red,Black,no return
+davebets,1,Red,Black,no return
+davebets,1,1,34,no return
+davebets,1,Red,Black,no return
+davebets,1,Red,Black,no return
+a,1,Red,Red,2
+a,1,14,6,no return
+a,1,Black,Red,no return
+a,1,Red,Black,no return
+a,1,Red,Red,2
+a,1,Red,Red,2
+a,1,Black,Red,no return
+a,1,Odd,Odd,2
+a,1,Even,Odd,no return
+a,1,Even,Odd,no return
+a,1,"[5, 2]",29,no return

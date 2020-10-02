@@ -1,8 +1,7 @@
 require 'csv'
 require 'tty-prompt'
 require 'rainbow'
-# require_relative '/classes/admin'
-# require_relative '/classes/public'
+require 'smarter_csv'
 require_relative 'classes/user'
 require_relative 'classes/gamble'
 # row["balance"] isnt updating but csv is 
@@ -150,8 +149,9 @@ end
 row = CSV.parse(File.read("users.csv"), headers: true).find{|row| row["username"] == $username}
 if row["admin"] == "true"
     admin_prompt = TTY::Prompt.new
-    admin_options = ["View_all_bets", "Highest winner""Help", "Cancel"]
+    admin_options = ["View all bets", "Highest winner", "Cancel"]
     admin_selection = admin_prompt.select("Felling lucky?", admin_options)
+
 end
 
 loop do 
@@ -230,7 +230,7 @@ loop do
                     puts "Bet exceeds balance"
                     sleep 2
                 else
-                    gamble.red(bet)
+                    row = gamble.red(bet)
                 end
             elsif bet_selection == bet_options[2]
                 #black
@@ -246,7 +246,7 @@ loop do
                     puts "Bet exceeds balance"
                     sleep 2
                 else
-                    gamble.black(bet)
+                    row = gamble.black(bet)
                 end
             
             elsif bet_selection == bet_options[3]
@@ -263,7 +263,7 @@ loop do
                     puts "Bet exceeds balance"
                     sleep 2
                 else
-                    gamble.odd(bet)
+                   row = gamble.odd(bet)
                 end
             elsif bet_selection == bet_options[4]
                 #Even bet feature
@@ -279,11 +279,74 @@ loop do
                     puts "Bet exceeds balance"
                     sleep 2
                 else
-                    gamble.even(bet)
+                   row = gamble.even(bet)
                 end
             elsif bet_selection == bet_options[5]
                 #split feature
-                Gamble.split
+                data = CSV.parse(File.read("users.csv"), headers: true)
+                #prints the roulette table
+                puts "#{Rainbow("1 ").bg(:red).black} #{Rainbow("2 ").bg(:black).red} #{Rainbow("3 ").bg(:red).black}" 
+                puts "#{Rainbow("4 ").bg(:black).red} #{Rainbow("5 ").bg(:red).black} #{Rainbow("6 ").bg(:black).red}" 
+                puts "#{Rainbow("7 ").bg(:red).black} #{Rainbow("8 ").bg(:black).red} #{Rainbow("9 ").bg(:red).black}" 
+                puts "#{Rainbow(10).bg(:black).red} #{Rainbow(11).bg(:black).red} #{Rainbow(12).bg(:red).black}" 
+                puts "#{Rainbow(13).bg(:black).red} #{Rainbow(14).bg(:red).black} #{Rainbow(15).bg(:black).red}" 
+                puts "#{Rainbow(16).bg(:red).black} #{Rainbow(17).bg(:black).red} #{Rainbow(18).bg(:red).black}" 
+                puts "#{Rainbow(19).bg(:red).black} #{Rainbow(20).bg(:black).red} #{Rainbow(21).bg(:red).black}" 
+                puts "#{Rainbow(22).bg(:black).red} #{Rainbow(23).bg(:red).black} #{Rainbow(24).bg(:black).red}" 
+                puts "#{Rainbow(25).bg(:red).black} #{Rainbow(26).bg(:black).red} #{Rainbow(27).bg(:red).black}" 
+                puts "#{Rainbow(28).bg(:black).red} #{Rainbow(29).bg(:black).red} #{Rainbow(30).bg(:red).black}" 
+                puts "#{Rainbow(31).bg(:black).red} #{Rainbow(32).bg(:red).black} #{Rainbow(33).bg(:black).red}" 
+                puts "#{Rainbow(34).bg(:red).black} #{Rainbow(35).bg(:black).red} #{Rainbow(36).bg(:red).black}"
+                puts "whats the first number you want to split?"
+                split1 = gets.chomp.to_i
+                split_options = Gamble.split(split1)
+                puts "NOTE: second number must be diectly above, below or on either side!"
+                puts "Options: #{split_options}"### split options doesnt are not set yet 
+                puts "whats the second number you want to split?"
+                split2 = gets.chomp.to_i
+                puts "How much do you want to gamble?"
+                print "$"
+                bet = gets.chomp.to_i              
+                split_nums = []
+                split_nums << split1
+                split_nums << split2
+                if split_options.include?(split2)
+                    win_val = Gamble.spin_wheel()
+                    if split_nums.include?(win_val)
+                        puts "YOU WON!!!"
+                        puts "Winning number: #{win_val}"
+                        puts "You won: #{bet * 17}"
+                        new_balance = row["balance"].to_i + (bet*17)
+                        return_result = row
+                        return_result["balance"] = new_balance
+                        row["balance"] = new_balance.to_s
+                        val_returned = bet * 17
+                        sleep 3
+                        Gamble.log_bet(bet, split_nums, win_val, val_returned)
+                    else
+                        puts "Better luck next time"
+                        puts "Winning number: #{win_val}"
+                        new_balance = row["balance"].to_i - bet
+                        return_result = row
+                        return_result["balance"] = new_balance
+                        row["balance"] = new_balance.to_s
+                        sleep 3
+                        data.each do |row|
+                            if row["username"] == $username
+                                new_balance = row["balance"].to_i - bet
+                                row["balance"] = new_balance.to_s
+                                return_result = row
+                                return_result["balance"] = new_balance
+                                File.write("users.csv", data) do |row|
+                                    row["balance"] << [new_balance]
+                                    File.close
+                                end
+                            end
+                        end
+                        Gamble.log_bet(bet,split_nums,win_val,"no return")
+                    end
+                end
+
             elsif bet_selection == bet_options[6]
                 system "clear"
                 puts "Number - bet on any number between 1 & 36 or '0' '00'"

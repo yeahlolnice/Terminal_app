@@ -4,23 +4,26 @@ class Gamble
     
     @@win_list = []
 
+
     def self.win_list
         return @@win_list
     end
+
 
     def initialize(bet)
         @bet = bet
         @row = CSV.parse(File.read("users.csv"), headers: true).find{|row| row["username"] == $username}
     end
     
-    def self.logBet(stake, bet_val, win_val, val_returned)
+
+    def self.log_bet(stake, bet_val, win_val, val_returned)
         CSV.open("betLog.csv", "a") do |csv|
             csv << [$username,stake,bet_val,win_val,val_returned] 
             csv.close
         end
     end
 
-    def spin_wheel
+    def self.spin_wheel
         numbers = [0,00,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27,28,29,30,31,32,33,34,35,36]
         @win_val = numbers.shuffle.pop
         @@win_list.push(@win_val)
@@ -31,15 +34,20 @@ class Gamble
         sleep 1
         puts "1"
         sleep 1
+        return @win_val
     end
+
 
     def gamble_num(num, bet)
         data = CSV.parse(File.read("users.csv"), headers: true)
         spin_wheel()
         if @win_val == num
+            return_result = nil
             data.each do |row|
                 if row["username"] == $username
                     new_balance = row["balance"].to_i + (bet*35)
+                    return_result = row
+                    return_result["balance"] = new_balance
                     row["balance"] = new_balance.to_s
                     File.write("users.csv", data) do |row|
                         row["balance"] << [new_balance]
@@ -50,12 +58,11 @@ class Gamble
                     sleep 5
                     @val_returned = bet*35
                     puts "Winning Row:"
-                    p row
+                    num = num.to_s
+                    Gamble.log_bet(bet,num,@win_val,@val_returned)
                     return row
                 end
             end
-            num = num.to_s
-            Gamble.logBet(bet,num,@win_val,@val_returned)
         else
             # system "clear"
             puts "Better luck next time!"
@@ -71,14 +78,15 @@ class Gamble
                         row["balance"] << [new_balance]
                         File.close
                     end
+                    @val_returned = "no return"
+                    sleep 2
+                    Gamble.log_bet(bet,num,@win_val,@val_returned)
+                    return return_result
                 end
             end
-            @val_returned = "no return"
-            sleep 2
-            Gamble.logBet(bet,num,@win_val,@val_returned)
-            return return_result
         end 
     end
+
 
     def red(bet)
         system "clear"
@@ -86,9 +94,12 @@ class Gamble
         red_numbers = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]
         spin_wheel()
         if red_numbers.include?(@win_val)
+            return_result = nil
             data.each do |row|
                 if row["username"] == $username
                     new_balance = row["balance"].to_i + (bet*2)
+                    return_result = row
+                    return_result["balance"] = new_balance
                     row["balance"] = new_balance.to_s
                     File.write("users.csv", data) do |row|
                         row["balance"] << [new_balance]
@@ -97,29 +108,35 @@ class Gamble
                     puts "YOU WON!!!"
                     puts "$#{bet*2}"
                     sleep 5
+                    @val_returned = bet*2
+                    Gamble.log_bet(bet,"Red","Red",@val_returned)
+                    return return_result
                 end
             end
-            @val_returned = bet*2
-            Gamble.logBet(bet,"Red","Red",@val_returned)
         else
             system "clear"
             puts "Better luck next time!"
             puts "Winning color: Black"
+            return_result = nil
             data.each do |row|
                 if row["username"] == $username
                     new_balance = row["balance"].to_i - bet
+                    return_result = row
+                    return_result["balance"] = new_balance
                     row["balance"] = new_balance.to_s
                     File.write("users.csv", data) do |row|
                         row["balance"] << [new_balance]
                         File.close
                     end
                     @val_returned = "no return"
-                    Gamble.logBet(bet,"Red","Black",@val_returned)
+                    Gamble.log_bet(bet,"Red","Black",@val_returned)
                     sleep 4
+                    return return_result
                 end
             end
         end       
     end
+
 
     def black(bet)
         data = CSV.parse(File.read("users.csv"), headers: true)
@@ -131,6 +148,8 @@ class Gamble
             data.each do |row|
                 if row["username"] == $username
                     new_balance = row["balance"].to_i + (bet*2)
+                    return_result = row
+                    return_result["balance"] = new_balance
                     row["balance"] = new_balance.to_s
                     File.write("users.csv", data) do |row|
                         row["balance"] << [new_balance]
@@ -139,8 +158,9 @@ class Gamble
                     @val_returned = bet*2
                     puts "YOU WON!!!"
                     puts "$#{bet*2}"
-                    Gamble.logBet(bet,"Black","Black",@val_returned)
+                    Gamble.log_bet(bet,"Black","Black",@val_returned)
                     sleep 5
+                    return return_result
                 end
             end
         else
@@ -150,18 +170,22 @@ class Gamble
             data.each do |row|
                 if row["username"] == $username
                     new_balance = row["balance"].to_i - bet
+                    return_result = row
+                    return_result["balance"] = new_balance
                     row["balance"] = new_balance.to_s
                     File.write("users.csv", data) do |row|
                         row["balance"] << [new_balance]
                         File.close
                     end
                     @val_returned = "no return"
-                    Gamble.logBet(bet,"Black","Red",@val_returned)
+                    Gamble.log_bet(bet,"Black","Red",@val_returned)
                     sleep 4
+                    return return_result
                 end
             end
         end       
     end
+
 
     def odd(bet)
         data = CSV.parse(File.read("users.csv"), headers: true)
@@ -180,8 +204,9 @@ class Gamble
                     @val_returned = bet*2
                     puts "YOU WON!!!"
                     puts "$#{bet*2}"
-                    Gamble.logBet(bet,"Odd","Odd",@val_returned)
+                    Gamble.log_bet(bet,"Odd","Odd",@val_returned)
                     sleep 5
+                    return row
                 end
             end
         else
@@ -196,10 +221,11 @@ class Gamble
                 File.close
             end
             @val_returned = "no return"
-            Gamble.logBet(bet,"Odd","Even",@val_returned)
+            Gamble.log_bet(bet,"Odd","Even",@val_returned)
             sleep 4
         end
     end
+
 
     def even(bet)
         data = CSV.parse(File.read("users.csv"), headers: true)
@@ -216,13 +242,13 @@ class Gamble
                         row["balance"] << [new_balance]
                         File.close
                     end
-                    x = bet*2.to_s
-                    @val_returned = "$"+ x
-                    p @val_returned
+                    @val_returned = bet * 2
+                    @val_returned = @val_returned.to_s
                     puts "YOU WON!!!"
                     puts "$#{bet*2}"
-                    Gamble.logBet(bet,"Even","Even",@val_returned)
+                    Gamble.log_bet(bet,"Even","Even",@val_returned)
                     sleep 5
+                    return row
                 end
             end
         else
@@ -238,30 +264,18 @@ class Gamble
                         File.close
                     end
                     @val_returned = "no return"
-                    Gamble.logBet(bet,"Even","Odd",@val_returned)
+                    Gamble.log_bet(bet,"Even","Odd",@val_returned)
                     sleep 4
+                    return row
                 end
             end
         end
     end
 
-    def self.split
+
+    def self.split(split1)
         #split feature
-        #prints the roulette table
-        puts "#{Rainbow("1 ").bg(:red).black} #{Rainbow("2 ").bg(:black).red} #{Rainbow("3 ").bg(:red).black}" 
-        puts "#{Rainbow("4 ").bg(:black).red} #{Rainbow("5 ").bg(:red).black} #{Rainbow("6 ").bg(:black).red}" 
-        puts "#{Rainbow("7 ").bg(:red).black} #{Rainbow("8 ").bg(:black).red} #{Rainbow("9 ").bg(:red).black}" 
-        puts "#{Rainbow(10).bg(:black).red} #{Rainbow(11).bg(:black).red} #{Rainbow(12).bg(:red).black}" 
-        puts "#{Rainbow(13).bg(:black).red} #{Rainbow(14).bg(:red).black} #{Rainbow(15).bg(:black).red}" 
-        puts "#{Rainbow(16).bg(:red).black} #{Rainbow(17).bg(:black).red} #{Rainbow(18).bg(:red).black}" 
-        puts "#{Rainbow(19).bg(:red).black} #{Rainbow(20).bg(:black).red} #{Rainbow(21).bg(:red).black}" 
-        puts "#{Rainbow(22).bg(:black).red} #{Rainbow(23).bg(:red).black} #{Rainbow(24).bg(:black).red}" 
-        puts "#{Rainbow(25).bg(:red).black} #{Rainbow(26).bg(:black).red} #{Rainbow(27).bg(:red).black}" 
-        puts "#{Rainbow(28).bg(:black).red} #{Rainbow(29).bg(:black).red} #{Rainbow(30).bg(:red).black}" 
-        puts "#{Rainbow(31).bg(:black).red} #{Rainbow(32).bg(:red).black} #{Rainbow(33).bg(:black).red}" 
-        puts "#{Rainbow(34).bg(:red).black} #{Rainbow(35).bg(:black).red} #{Rainbow(36).bg(:red).black}" 
-        puts "press enter to continue"
-        
+        #2d array of table numbers
         table_array = [
             [1,2,3],
             [4,5,6],
@@ -276,17 +290,23 @@ class Gamble
             [31,32,33],
             [34,35,36]
         ]
+        
+        split_options = []
         # looping over table_array
         table_array.each_index do |y|
             # Get subarray and loop over its indexes also.
             subarray = table_array[y]
             subarray.each_index do |x|
                 # Display x and y of array.
-                puts "Y:#{y} X:#{x} "
+                if table_array[y][x] == split1
+                    split_options << table_array[y-1][x]
+                    split_options << table_array[y][x-1]
+                    split_options << table_array[y+1][x]
+                    split_options << table_array[y][x+1]
+                end
             end
-        
         end
-        gets.chomp
+        return split_options
     end
 
     def self.betHistory
