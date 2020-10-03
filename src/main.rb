@@ -146,12 +146,14 @@ loop do
     end
 end
 
+#admin menu
+row = CSV.parse(File.read("users.csv"), headers: true).find{|row| row["username"] == $username}
 loop do 
     system "clear"
-    row = CSV.parse(File.read("users.csv"), headers: true).find{|row| row["username"] == $username}
+    highest_return = []
     if row["admin"] == "true"
         admin_prompt = TTY::Prompt.new
-        admin_options = ["View all bets", "Highest winner", "Cancel"]
+        admin_options = ["View all bets", "Highest winner", "Exit"]
         admin_selection = admin_prompt.select("Felling lucky?", admin_options)
         if admin_selection == admin_options[0]
             CSV.foreach("betLog.csv", headers: true) do |row|
@@ -160,20 +162,32 @@ loop do
             puts "Press enter to continue"
             gets.chomp
         elsif admin_selection == admin_options[1]
+            #filter bets to highest return
             CSV.foreach("betLog.csv", headers: true) do |row|
-                # puts "#{row["stake"]} on #{row["bet_val"]} return: #{row["return"]} "
-                previous_balance = row["balance"].to_i
-                if previous_balance < row["balance"].to_i
-                    previous_balance = row["balance"]
-                    puts "#{row["username"]} - #{row["balance"]}"
+                if row["return"].to_i == 0
+                    next
+                elsif highest_return.include?(row["return"])
+                    next
+                else
+                    highest_return << [row["username"], row["return"]]
                 end
+            end
+            highest_return.sort!.reverse!
+            p highest_return
+            i = 0
+            x = 0
+            while i < 10
+                puts "#{highest_return[i][x]} - #{highest_return[i][x + 1]}"
+                x += 1
+                i += 1
             end
             puts "Press enter to continue"
             gets.chomp
         elsif admin_selection == admin_options[2]
             exit!
         end
-
+    else
+        break
     end
 end
 
