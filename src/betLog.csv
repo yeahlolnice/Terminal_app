@@ -83,3 +83,9 @@ a,1,Odd,Odd,2
 a,1,Even,Odd,no return
 a,1,Even,Odd,no return
 a,1,"[5, 2]",29,no return
+a,5,"[5, 8]",30,no return
+a,50,"[14, 17]",5,no return
+a,5,Red,Black,no return
+a,5,"[5, 8]",12,no return
+a,50,Even,Odd,no return
+davebets,-1,1,,no return

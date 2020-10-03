@@ -2,11 +2,11 @@ require 'csv'
 require 'tty-prompt'
 require 'rainbow'
 require 'smarter_csv'
-require_relative 'classes/user'
 require_relative 'classes/gamble'
 # row["balance"] isnt updating but csv is 
 
 data = CSV.parse(File.read("users.csv"), headers: true)
+#i see the problem with this method but i run out of time
 def balanceMenu
     data = CSV.parse(File.read("users.csv"), headers: true)
     return_result = nil
@@ -35,7 +35,7 @@ def balanceMenu
                         File.close
                     end
                     sleep 1
-                elsif deposit == 0
+                elsif deposit <= 0
                     puts "You must enter a number above 0"
                     sleep 1.5
                 end
@@ -146,16 +146,39 @@ loop do
     end
 end
 
-row = CSV.parse(File.read("users.csv"), headers: true).find{|row| row["username"] == $username}
-if row["admin"] == "true"
-    admin_prompt = TTY::Prompt.new
-    admin_options = ["View all bets", "Highest winner", "Cancel"]
-    admin_selection = admin_prompt.select("Felling lucky?", admin_options)
+loop do 
+    system "clear"
+    row = CSV.parse(File.read("users.csv"), headers: true).find{|row| row["username"] == $username}
+    if row["admin"] == "true"
+        admin_prompt = TTY::Prompt.new
+        admin_options = ["View all bets", "Highest winner", "Cancel"]
+        admin_selection = admin_prompt.select("Felling lucky?", admin_options)
+        if admin_selection == admin_options[0]
+            CSV.foreach("betLog.csv", headers: true) do |row|
+                puts "#{row["username"]} - #{row["stake"]} on #{row["bet_val"]} return: #{row["return"]} "
+            end
+            puts "Press enter to continue"
+            gets.chomp
+        elsif admin_selection == admin_options[1]
+            CSV.foreach("betLog.csv", headers: true) do |row|
+                # puts "#{row["stake"]} on #{row["bet_val"]} return: #{row["return"]} "
+                previous_balance = row["balance"].to_i
+                if previous_balance < row["balance"].to_i
+                    previous_balance = row["balance"]
+                    puts "#{row["username"]} - #{row["balance"]}"
+                end
+            end
+            puts "Press enter to continue"
+            gets.chomp
+        elsif admin_selection == admin_options[2]
+            exit!
+        end
 
+    end
 end
 
 loop do 
-    # system "clear"
+    system "clear"
     puts Rainbow("
     /$$      /$$           /$$                                            
     | $$  /$ | $$          | $$                                            
@@ -187,7 +210,7 @@ loop do
             |_______/  \\_______/   \\___/        |__/ |__/ |__/ \\_______/|__/  |__/ \\______/").red
             # Bet win 
             # output 
-            p row
+            # p row
             # p row["balance"].to_i
             puts "Current balance: $#{row["balance"]}"
             bet_prompt = TTY::Prompt.new
@@ -345,6 +368,9 @@ loop do
                         end
                         Gamble.log_bet(bet,split_nums,win_val,"no return")
                     end
+                else
+                    puts "Enter one of the options!"
+                    sleep 2
                 end
 
             elsif bet_selection == bet_options[6]

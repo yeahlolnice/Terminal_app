@@ -40,7 +40,7 @@ class Gamble
 
     def gamble_num(num, bet)
         data = CSV.parse(File.read("users.csv"), headers: true)
-        spin_wheel()
+        Gamble.spin_wheel()
         if @win_val == num
             return_result = nil
             data.each do |row|
@@ -92,7 +92,7 @@ class Gamble
         system "clear"
         data = CSV.parse(File.read("users.csv"), headers: true)
         red_numbers = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]
-        spin_wheel()
+        Gamble.spin_wheel()
         if red_numbers.include?(@win_val)
             return_result = nil
             data.each do |row|
@@ -142,7 +142,7 @@ class Gamble
         data = CSV.parse(File.read("users.csv"), headers: true)
         black_numbers = [2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35]
         puts "Winning numbers:#{@win_list}"
-        spin_wheel()
+        Gamble.spin_wheel()
         sleep 0.5
         if black_numbers.include?(@win_val)
             data.each do |row|
@@ -191,7 +191,7 @@ class Gamble
         data = CSV.parse(File.read("users.csv"), headers: true)
         odd_numbers = [1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35]
         puts "Winning numbers:#{@win_list}"
-        spin_wheel()
+        Gamble.spin_wheel()
         if odd_numbers.include?(@win_val)
             data.each do |row|
                 if row["username"] == $username
@@ -231,7 +231,7 @@ class Gamble
         data = CSV.parse(File.read("users.csv"), headers: true)
         even_numbers = [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36]
         puts "Winning numbers:#{@win_list}"
-        spin_wheel()
+        Gamble.spin_wheel()
         sleep 0.5
         if even_numbers.include?(@win_val)
             data.each do |row|

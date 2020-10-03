@@ -40,3 +40,12 @@ On start up the app will prompt the user to log in or create new user, once sucs
 #### Error handling:
 Every time the user enters something the input will go through some error checking to make sure the bet amount is a number or so the user cant withdraw more then they have. If any error occurs it will prompt the user with a help message for what the program expects the input to be, then ask for valid input.
 
+# Installation
+
+Tested on windows laptop
+
+software requirements:
+- unbuntu on windows 
+- ruby 2.7.1 or greater 
+
+To install the app gems naviagte to the directory were you cloned the src file and run the `run.sh` file with `./run.sh` this will install the latest version of bundler and install all of the gems used in the app. 
