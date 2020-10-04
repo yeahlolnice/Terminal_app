@@ -162,7 +162,7 @@ loop do
             puts "Press enter to continue"
             gets.chomp
         elsif admin_selection == admin_options[1]
-            #filter bets to highest return
+            #filter bets to highest return ps i know its broken
             CSV.foreach("betLog.csv", headers: true) do |row|
                 if row["return"].to_i == 0
                     next

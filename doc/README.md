@@ -48,4 +48,10 @@ software requirements:
 - unbuntu on windows 
 - ruby 2.7.1 or greater 
 
-To install the app gems naviagte to the directory were you cloned the src file and run the `run.sh` file with `./run.sh` this will install the latest version of bundler and install all of the gems used in the app. 
+To install the app gems naviagte to the directory were you cloned git repository. Then open your command propmt or terminal, then run the `run.sh` file with `./run.sh` this will install the latest version of bundler and install all of the gems used in the app. 
+
+Admin Account - username: yeahlolnice
+                Password: password
+
+
+[trello](https://trello.com/b/FAXfR9T2)
