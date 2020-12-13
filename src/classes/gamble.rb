@@ -191,7 +191,7 @@ class Gamble
         data = CSV.parse(File.read("users.csv"), headers: true)
         odd_numbers = [1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35]
         puts "Winning numbers:#{@win_list}"
-        Gamble.spin_wheel()
+        @win_val = Gamble.spin_wheel()
         if odd_numbers.include?(@win_val)
             data.each do |row|
                 if row["username"] == $username
@@ -212,7 +212,7 @@ class Gamble
         else
             system "clear"
             puts "Better luck next time!"
-            puts "Winning Number #{@win_val}"
+            puts "Even Wins"
             new_balance = @row["balance"].to_i - bet
             @row["balance"] = new_balance.to_s
             sleep 3

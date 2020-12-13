@@ -91,3 +91,18 @@ a,50,Even,Odd,no return
 davebets,-1,1,,no return
 a,50,Red,Black,no return
 a,50,Red,Black,no return
+a,50,Odd,Even,no return
+a,50,Odd,Even,no return
+a,50,Odd,Odd,100
+a,50,Odd,Odd,100
+a,5000,Odd,Even,no return
+a,5000,Odd,Odd,10000
+a,5000,Odd,Even,no return
+a,6000,Odd,Even,no return
+a,2523,Odd,Even,no return
+a,345,Odd,Odd,690
+a,4574,Odd,Odd,9148
+a,3453,Odd,Odd,6906
+a,232424,Odd,Odd,464848
+a,3465465,Odd,Odd,6930930
+a,33453,Odd,Even,no return

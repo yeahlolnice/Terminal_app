@@ -224,9 +224,9 @@ loop do
             |_______/  \\_______/   \\___/        |__/ |__/ |__/ \\_______/|__/  |__/ \\______/").red
             # Bet win 
             # output 
-            # p row
+            # p row['balance']
             # p row["balance"].to_i
-            puts "Current balance: $#{row["balance"]}"
+            puts "Current balance: $#{row['balance']}"
             bet_prompt = TTY::Prompt.new
             bet_options = ["Number", "Red", "Black", "Odd", "Even", "Split", "Help", "Cancel"]
             bet_selection = bet_prompt.select("Felling lucky?", bet_options, per_page: 8)
